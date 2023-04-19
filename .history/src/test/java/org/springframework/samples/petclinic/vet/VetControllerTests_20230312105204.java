@@ -47,9 +47,6 @@ class VetControllerTests {
 	@MockBean
 	private VetRepository vets;
 
-	@MockBean
-	private VetService vetService;
-
 	private Vet james() {
 		Vet james = new Vet();
 		james.setFirstName("James");

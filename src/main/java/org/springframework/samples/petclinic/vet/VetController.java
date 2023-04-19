@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.vet;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,9 +39,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 class VetController {
 
 	private final VetRepository vetRepository;
+	private final VetService vetService;
 
-	public VetController(VetRepository clinicService) {
+	public VetController(VetRepository clinicService, VetService vetService) {
 		this.vetRepository = clinicService;
+		this.vetService = vetService;
+	}
+
+	@PostMapping("/vets")
+	public @ResponseBody Vet createVet(@RequestBody Vet vet) {
+		return vetService.createVet(vet.getFirstName(), vet.getLastName(), vet.getSpecialties());
 	}
 
 	@GetMapping("/vets.html")
@@ -76,4 +86,8 @@ class VetController {
 		return vets;
 	}
 
+	@GetMapping("/specialties")
+	public @ResponseBody HashSet<String> getAllSpecialties() {
+		return new HashSet<>(vetService.getAllVetSpecialtiesInClinic());
+	}
 }
